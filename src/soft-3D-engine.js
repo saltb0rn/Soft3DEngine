@@ -41,13 +41,16 @@ const Mesh = (function() {
 Soft3DEngine.Mesh = Mesh;
 
 const Cube = (function() {
-    function Cube(len) {
+    function Cube(len, position) {
         len = len >> 0;
         if (len < 2) {
             throw Error('len of cube should be greater than 2');
         }
         let mesh = new Mesh('cube', 8),
             v = len >> 1;
+        if (position) {
+            mesh.position = position;            
+        }
         mesh.vertices[0] = glMatrix.vec3.fromValues(v, v, v);
         mesh.vertices[1] = glMatrix.vec3.fromValues(-v, v, v);
         mesh.vertices[2] = glMatrix.vec3.fromValues(-v, -v, v);
@@ -164,7 +167,6 @@ const Device = (function() {
                     projectionMatrix,
                     _transformMatrix1
                 );
-
             for (var indexVertices = 0; indexVertices < cMesh.vertices.length; indexVertices++) {
                 var projectPoint = this.project(cMesh.vertices[indexVertices], transformMatrix);
                 this.drawPoint(projectPoint);

@@ -110,8 +110,10 @@ const Device = (function() {
             transMat);
         var divW = 1 / point[3];
         var pointNDC = glMatrix.vec3.fromValues(point[0] * divW, point[1] * divW, point[2] * divW);
-        var x = ((pointNDC[0] * this.workingWidth) >> 0) + this.workingWidth >> 1;
-        var y = ((-pointNDC[1] * this.workingHeight) >> 0) + this.workingHeight >> 1;
+        var halfWidth = this.workingWidth >> 1,
+            halfHeight = this.workingHeight >> 1;
+        var x = ((pointNDC[0] * halfWidth) >> 0) + halfWidth;
+        var y = ((-pointNDC[1] * halfHeight) >> 0) + halfHeight;
         return glMatrix.vec2.fromValues(x, y);
     };
 

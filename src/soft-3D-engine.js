@@ -10,10 +10,10 @@ const Camera = (function() {
         this.target = target;
     }
 
-    Camera.prototype.lookAt = function(position, target, up) {
-        this.position = position;
-        this.target = target;
-    };
+    // Camera.prototype.lookAt = function(position, target, up) {
+    //     this.position = position;
+    //     this.target = target;
+    // };
 
     return Camera;
 })();
@@ -32,8 +32,8 @@ const Mesh = (function() {
         this.position = glMatrix.vec3.create();
     }
 
-    Mesh.prototype.transformByMatrix = function(mat) {
-    };
+    // Mesh.prototype.transformByMatrix = function(mat) {
+    // };
 
     return Mesh;
 })();
@@ -49,7 +49,7 @@ const Cube = (function() {
         let mesh = new Mesh('cube', 8),
             v = len >> 1;
         if (position) {
-            mesh.position = position;            
+            mesh.position = position;
         }
         mesh.vertices[0] = glMatrix.vec3.fromValues(v, v, v);
         mesh.vertices[1] = glMatrix.vec3.fromValues(-v, v, v);
@@ -96,11 +96,22 @@ const Device = (function() {
     };
 
     Device.prototype.project = function(coord, transMat) {
-        // point in NDC
-        var point = glMatrix.vec3.transformMat4(glMatrix.vec3.create(), coord, transMat);
-        // 变换是根据Canvas的坐标原点位于左上角,需要手动把坐标变换到现对于中心作为原点
-        var x = point[0] * this.workingWidth + this.workingWidth >> 1;
-        var y = -point[1] * this.workingHeight + this.workingHeight >> 1;
+        /*
+          coord in homogeneous coordinate system, if you don't want to convert it to Cartesian coordinate manually, use below lines:
+
+          var point = glMatrix.vec3.transformMat4(glMatrix.vec4.create(), coord, transMat);
+          var x = point[0] * this.workingWidth + this.workingWidth >> 1;
+          var y = -point[1] * this.workingWidth + this.workingWidth >> 1;
+          return glMatrix.vec2.fromValues(x, y);
+        */
+        var point = glMatrix.vec4.transformMat4(
+            glMatrix.vec4.create(),
+            glMatrix.vec4.fromValues(coord[0], coord[1], coord[2], 1.0),
+            transMat);
+        var divW = 1 / point[3];
+        var pointNDC = glMatrix.vec3.fromValues(point[0] * divW, point[1] * divW, point[2] * divW);
+        var x = ((pointNDC[0] * this.workingWidth) >> 0) + this.workingWidth >> 1;
+        var y = ((-pointNDC[1] * this.workingHeight) >> 0) + this.workingHeight >> 1;
         return glMatrix.vec2.fromValues(x, y);
     };
 

@@ -13,13 +13,17 @@
          body { overflow: hidden; }
 
          canvas {
-             width: 100vw;
-             height: 100vh;
+             position: absolute;
+             top: 0;
+             bottom: 0;
+             left: 0;
+             right: 0;
+             margin: auto;
          }
         </style>
     </head>
     <body>
-        <canvas id="frontbuffer" style="background-color: black"></canvas>
+        <canvas id="frontbuffer" style="background-color: black" height="300" width="600"></canvas>
         <script src="src/main.js"></script>
     </body>
 </html>

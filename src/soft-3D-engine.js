@@ -138,6 +138,13 @@ const Device = (function() {
             0.78, this.workingWidth / this.workingHeight,
             0.1, 10.0
         );
+        /*
+          if you want to use orthographic projection, please use below lines:
+
+          var projectionMatrix = glMatrix.mat4.ortho(
+              glMatrix.mat4.create(), -20, 20, -10, 10, 0.1, 100);
+         */
+
         for (var i = 0; i < meshes.length; i++) {
             var cMesh = meshes[i],
                 modelMatrixRy = glMatrix.mat4.rotateY(
